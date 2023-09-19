@@ -19,6 +19,9 @@ public class Departement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDepart;
     private String nomDepart;
+    private float surface;
+    private String emplacement;
+    private float prix;
     @OneToMany(mappedBy = "departement",cascade = CascadeType.ALL)
     private Set<Etudiant> etudiants_depar;
 }

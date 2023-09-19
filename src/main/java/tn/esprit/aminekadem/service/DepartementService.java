@@ -22,6 +22,9 @@ public class DepartementService extends IGenericServiceImpl<Departement,Integer>
     DepartementRepository departementRepository;
 
 
+
+
+
     @Override
     public Set<Departement> retrieveDepartementsByUniversite(Integer idUniversite) {
         Universite universite=universiteRepository.findById(idUniversite).orElse(null);

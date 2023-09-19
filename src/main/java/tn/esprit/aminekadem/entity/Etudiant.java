@@ -29,6 +29,6 @@ public class Etudiant {
     @ManyToOne
     @JsonIgnore
     private Departement departement;
-    @OneToMany(mappedBy = "etudiant_contr",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "etudiantcontr",cascade = CascadeType.ALL)
     private Set<Contrat> contrat;
 }

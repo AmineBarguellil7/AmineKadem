@@ -50,7 +50,7 @@ public class EtudiantService extends IGenericServiceImpl<Etudiant,Integer> imple
         Equipe equipe=equipeRepository.findById(idEquipe).orElse(null);
         if (contrat!=null && equipe!=null) {
             Etudiant etudiant=etudiantRepository.save(e);
-            contrat.setEtudiant_contr(etudiant);
+            contrat.setEtudiantcontr(etudiant);
             if(etudiant.getEquipe_etud()!= null) {
                 etudiant.getEquipe_etud().add(equipe);
             } else{

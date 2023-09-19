@@ -18,6 +18,6 @@ public class DetailEquipe {
     private Integer idDetailEquipe;
     private Integer salle;
     private String thematique;
-    @OneToOne
+    @OneToOne(mappedBy = "detailEquipe")
     private Equipe equipe_detail;
 }

@@ -1,16 +1,21 @@
 package tn.esprit.aminekadem.service;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.aminekadem.Generic.IGenericServiceImpl;
+import tn.esprit.aminekadem.Util.HelperClass;
 import tn.esprit.aminekadem.entity.Contrat;
 import tn.esprit.aminekadem.entity.Etudiant;
 import tn.esprit.aminekadem.repos.ContratRepository;
 import tn.esprit.aminekadem.repos.EtudiantRepository;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 
+@Slf4j
 @Service
 public class ContratService extends IGenericServiceImpl<Contrat,Integer> implements IContratService{
 
@@ -23,6 +28,8 @@ public class ContratService extends IGenericServiceImpl<Contrat,Integer> impleme
 
     @Override
     public Contrat affectContratToEtudiant(Contrat ce, String nomE, String prenomE) {
+        log.info("affectation avec succes");
+        log.debug("This is Debug Test");
         Etudiant e=etudiantRepository.findByNomEAndPrenomE(nomE,prenomE);
         int nbrContratActifs=0;
         if(e!=null){
@@ -32,7 +39,7 @@ public class ContratService extends IGenericServiceImpl<Contrat,Integer> impleme
                 }
             }
             if(nbrContratActifs<5){
-                ce.setEtudiant_contr(e);
+                ce.setEtudiantcontr(e);
             }
         }
         return contratRepository.save(ce);
@@ -40,7 +47,7 @@ public class ContratService extends IGenericServiceImpl<Contrat,Integer> impleme
 
     @Override
     public Integer nbContratsValides(Date startDate, Date endDate) {
-        List<Contrat> contrats=contratRepository.findAll();
+        /*List<Contrat> contrats=contratRepository.findAll();
         int i=0;
         for (Contrat c:contrats) {
             if ((c.getDateDebutContrat().after(startDate) && c.getDateDebutContrat().before(endDate)) &&
@@ -51,36 +58,26 @@ public class ContratService extends IGenericServiceImpl<Contrat,Integer> impleme
                 }
             }
         }
-        return i;
+        return i;*/
+        log.info("IN method nbContratsValides");
+        Integer var = contratRepository.countByArchiveIsFalseAndDateDebutContratAfterAndDateFinContratBefore(startDate,endDate);
+        log.info("out of method nbContratsValides");
+        return var;
+    }
+
+
+    @Transactional
+    public void archiveAllExpiredContracts() {
+        contratRepository.findByArchiveIsFalseAndDateFinContrat(LocalDate.now()).stream().forEach(contrat -> contrat.setArchive(true));
     }
 
     @Override
-    public float montantApayerEntreDeuxDate(Date startDate, Date endDate) {
-        List<Contrat> contrats = contratRepository.findAll();
-        long diff = endDate.getTime() - startDate.getTime(); //ms
-        double chiffreAffaire =0 ;
-        for (Contrat c : contrats) {
-            if (!c.getArchive()) {
-                if ((c.getDateDebutContrat().before(startDate)) && (c.getDateFinContrat().after(endDate))) {
-                    double diffMois = diff / (1000 * 60 * 60 * 24 * 30);
-                    switch (c.getSpecialite()) {
-                        case IA:
-                            chiffreAffaire =+ diffMois * 300;
-                            break;
-                        case RESEAUX:
-                            chiffreAffaire =+ diffMois * 350;
-                            break;
-                        case CLOUD:
-                            chiffreAffaire =+ diffMois * 400;
-                            break;
-                        case SECURITE:
-                            chiffreAffaire =+ diffMois * 450;
-                            break;
-                    }
-                    return (float) chiffreAffaire;
-                }
-            }
-        }
-        return (float) chiffreAffaire;
+    public void retrieveAndUpdateStatusContrat() {
+        this.archiveAllExpiredContracts();
+        contratRepository.findByArchiveIsFalse().stream().filter(contrat -> HelperClass.getDate(LocalDate.now(),contrat.getDateFinContrat().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate())<16).forEach(
+             contrat -> System.out.println("le contrat de l'etudiant "+contrat.getEtudiantcontr().getNomE()+" va expirer")
+        );
     }
 }

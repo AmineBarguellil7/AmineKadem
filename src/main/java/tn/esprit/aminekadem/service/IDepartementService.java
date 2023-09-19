@@ -7,7 +7,6 @@ import tn.esprit.aminekadem.entity.Departement;
 import java.util.Set;
 
 public interface IDepartementService extends IGenericService<Departement,Integer> {
-
     public void assignUniversiteToDepartement(Integer idUniversite, Integer
             idDepartement);
 

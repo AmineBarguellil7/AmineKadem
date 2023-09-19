@@ -1,10 +1,12 @@
 package tn.esprit.aminekadem.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.aminekadem.Generic.GenericController;
 import tn.esprit.aminekadem.entity.Contrat;
 import tn.esprit.aminekadem.service.IContratService;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -20,8 +22,8 @@ public class ContratRestController extends GenericController<Contrat,Integer> {
         return contratService.affectContratToEtudiant(ce,nomE,prenomE);
     }
 
-    @GetMapping("/nbcontratsvalides")
-    public int nbContratsValides(@RequestBody Date startDate,@RequestBody Date endDate){
+    @GetMapping("/nbcontratsvalides/{startDate}/{endDate}")
+    public int nbContratsValides(@PathVariable  @DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate, @PathVariable  @DateTimeFormat(pattern = "yyyy-MM-dd")  Date endDate){
         return contratService.nbContratsValides(startDate,endDate);
     }
 }

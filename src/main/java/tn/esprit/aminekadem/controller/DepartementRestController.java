@@ -20,6 +20,7 @@ public class DepartementRestController extends GenericController<Departement,Int
     public void addAndAssignDepartement(@PathVariable int idUniversite, @PathVariable int idDepartement) {
         iDepartementService.assignUniversiteToDepartement(idUniversite,idDepartement);
     }
+
     @GetMapping("/retrieveDepByUniv/{idUniversity}")
     public Set<Departement> retrieveDepartementByUniversity(@PathVariable Integer idUniversity){
         return iDepartementService.retrieveDepartementsByUniversite(idUniversity);

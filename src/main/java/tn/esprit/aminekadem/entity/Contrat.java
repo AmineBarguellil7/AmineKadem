@@ -22,10 +22,11 @@ public class Contrat {
     private Date dateDebutContrat;
     @Temporal(TemporalType.DATE)
     private Date dateFinContrat;
+    private Integer montantContrat;
     @Enumerated(EnumType.STRING)
     private Specialite specialite;
     private Boolean archive;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JsonIgnore
-    private Etudiant etudiant_contr;
+    private Etudiant etudiantcontr;
 }
