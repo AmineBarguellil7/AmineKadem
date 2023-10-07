@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  server:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - localhost
+
+  localhost:
+    image: "mysql:5.7"
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: amine2
+      MYSQL_PASSWORD: amine2
+      MYSQL_ROOT_PASSWORD: amine2
+
